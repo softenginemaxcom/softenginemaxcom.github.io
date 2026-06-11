@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soft Engine Mobile Game</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #E8E4DC;
+      --black: #0A0A0A;
+      --green: #22A64A;
+      --green-dark: #1a8a3c;
+      --warm-gray: #B5B0A8;
+      --white: #ffffff;
+      --section-bg2: #D6D2C8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--black);
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    nav.scrolled {
+      border-color: rgba(0,0,0,0.08);
+      box-shadow: 0 1px 20px rgba(0,0,0,0.06);
+    }
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      font-size: 14px;
+    }
+    .nav-links a {
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* ── HERO ── */
+    .hero {
+      padding-top: 80px;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg);
+    }
+    .hero-inner {
+      width: 100%;
+      padding: 60px 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 40px;
+    }
+    .hero-text h1 {
+      font-size: clamp(52px, 8vw, 120px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      text-transform: none;
+    }
+    .hero-sub {
+      margin-top: 32px;
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 380px;
+      opacity: 0.65;
+    }
+    .hero-cta {
+      margin-top: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1.5px solid var(--green);
+      color: var(--green);
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-cta:hover {
+      background: var(--green);
+      color: var(--white);
+    }
+    .hero-device {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .device-box {
+      width: 260px;
+      height: 380px;
+      background: linear-gradient(160deg, #d8d3c8 0%, #c4bfb5 100%);
+      border-radius: 28px;
+      position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.18);
+    }
+    .device-line {
+      position: absolute;
+      top: 20%; left: 50%;
+      transform: translateX(-50%);
+      width: 1.5px;
+      height: 40%;
+      background: rgba(0,0,0,0.2);
+      border-radius: 2px;
+    }
+    .device-circle {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.25);
+    }
+    .device-vents {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 32px;
+      border-radius: 0 0 28px 28px;
+      overflow: hidden;
+      display: flex;
+      gap: 2px;
+      padding: 0 16px;
+      align-items: center;
+    }
+    .vent { flex: 1; height: 18px; background: rgba(0,0,0,0.1); border-radius: 2px; }
+
+    /* ── PIONEERING PLAY ── */
+    .section-green {
+      background: var(--green);
+      color: var(--white);
+      padding: 80px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1.5fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .section-green h2 {
+      font-size: clamp(36px, 4vw, 60px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .section-green p {
+      font-size: 15px;
+      line-height: 1.75;
+      opacity: 0.9;
+    }
+    .section-green a {
+      color: var(--white);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    /* ── GRADIENT TRANSITION ── */
+    .gradient-strip {
+      height: 200px;
+      background: linear-gradient(to bottom right, #f0ede5, var(--warm-gray));
+    }
+
+    /* ── FOLLOW JOURNEY ── */
+    .section-journey {
+      background: var(--bg);
+      padding: 0;
+    }
+    .journey-image {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(160deg, #d4cec4 0%, #b8b2a6 50%, #a09a90 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .journey-tablet {
+      width: 340px;
+      height: 220px;
+      background: linear-gradient(135deg, #d0ccc3 0%, #c0bbb2 100%);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .journey-pen {
+      position: absolute;
+      top: 30px; right: 60px;
+      width: 8px; height: 120px;
+      background: linear-gradient(to bottom, #555, #333);
+      border-radius: 4px 4px 2px 2px;
+      transform: rotate(-15deg);
+    }
+    .journey-mouse {
+      position: absolute;
+      top: 40px; right: 20px;
+      width: 44px; height: 60px;
+      background: linear-gradient(160deg, #ccc, #aaa);
+      border-radius: 22px 22px 16px 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    .journey-bottom {
+      padding: 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .journey-bottom h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .btn-connect {
+      border: 1.5px solid var(--green);
+      color: var(--green);
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-connect:hover {
+      background: var(--green);
+      color: var(--white);
+    }
+
+    /* ── PRODUCT GRID ── */
+    .section-products {
+      background: var(--bg);
+      padding: 80px 40px;
+    }
+    .section-products h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .product-card {
+      background: var(--section-bg2);
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-card.tall { aspect-ratio: 2/3; }
+    .product-card.short { aspect-ratio: 4/3; }
+    .product-icon {
+      font-size: 64px;
+      opacity: 0.35;
+      user-select: none;
+    }
+
+    /* ── SERVICES ── */
+    .section-services {
+      background: var(--black);
+      color: var(--white);
+      padding: 100px 40px;
+    }
+    .section-services h2 {
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 64px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .service-item {
+      background: var(--black);
+      padding: 40px 32px;
+    }
+    .service-num {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      opacity: 0.4;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .service-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .service-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      opacity: 0.55;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      padding: 60px 40px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .footer-left .footer-brand {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .footer-left .footer-made {
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .footer-left .footer-links {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .footer-left .footer-links a:hover { opacity: 1; text-decoration: underline; }
+    .footer-right {
+      text-align: right;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-device { display: none; }
+      .section-green { grid-template-columns: 1fr; gap: 32px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .services-grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; }
+      .footer-right { text-align: left; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .hero-inner, .section-green, .section-journey .journey-bottom,
+      .section-products, .section-services, footer { padding-left: 20px; padding-right: 20px; }
+      .nav-links { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">Soft Engine Mobile Game</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#products">products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Future-Ready Game Worlds</h1>
+        <p class="hero-sub">We craft immersive mobile experiences at the edge of technology and creativity — built for the players of tomorrow.</p>
+        <a href="contact.html" class="hero-cta">Get Started →</a>
+      </div>
+      <div class="hero-device">
+        <div class="device-box">
+          <div class="device-line"></div>
+          <div class="device-circle"></div>
+          <div class="device-vents">
+            <div class="vent"></div><div class="vent"></div><div class="vent"></div>
+            <div class="vent"></div><div class="vent"></div><div class="vent"></div>
+            <div class="vent"></div><div class="vent"></div><div class="vent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIONEERING PLAY -->
+  <section id="about" class="section-green">
+    <div>
+      <h2>Pioneering Play</h2>
+    </div>
+    <div>
+      <p>We're a collective of visionaries committed to evolving how stories are told through interactive media. Every pixel, mechanic, and narrative thread is an opportunity to disrupt expectations.</p>
+    </div>
+    <div>
+      <p>By blending breakthrough technology with daring creativity, we deliver experiences that resonate today and remain future-proof for tomorrow's players. <a href="#about">Learn More</a></p>
+    </div>
+  </section>
+
+  <!-- GRADIENT TRANSITION -->
+  <div class="gradient-strip"></div>
+
+  <!-- FOLLOW OUR JOURNEY -->
+  <section class="section-journey">
+    <div class="journey-image">
+      <div class="journey-tablet">
+        <div class="journey-pen"></div>
+        <div class="journey-mouse"></div>
+      </div>
+    </div>
+    <div class="journey-bottom">
+      <h2>Follow Our Journey</h2>
+      <a href="contact.html" class="btn-connect">Connect</a>
+    </div>
+  </section>
+
+  <!-- PRODUCT GRID -->
+  <section id="products" class="section-products">
+    <h2>Our Tools &amp; Gear</h2>
+    <div class="product-grid">
+      <div class="product-card"><span class="product-icon">⌨️</span></div>
+      <div class="product-card short"><span class="product-icon">🎮</span></div>
+      <div class="product-card tall"><span class="product-icon">✏️</span></div>
+      <div class="product-card"><span class="product-icon">🖥️</span></div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section-services">
+    <h2>What We Build</h2>
+    <div class="services-grid">
+      <div class="service-item">
+        <div class="service-num">01</div>
+        <div class="service-title">Mobile Game Development</div>
+        <p class="service-desc">End-to-end iOS and Android game development using cutting-edge engines and custom soft-body physics systems.</p>
+      </div>
+      <div class="service-item">
+        <div class="service-num">02</div>
+        <div class="service-title">Game Design & Narrative</div>
+        <p class="service-desc">Deep game mechanics, compelling story systems, and player journeys that keep audiences coming back.</p>
+      </div>
+      <div class="service-item">
+        <div class="service-num">03</div>
+        <div class="service-title">Live Ops & Monetization</div>
+        <p class="service-desc">Post-launch support, events, and economy design tuned for long-term engagement and sustainable revenue.</p>
+      </div>
+      <div class="service-item">
+        <div class="service-num">04</div>
+        <div class="service-title">Art & Visual Direction</div>
+        <p class="service-desc">Distinctive visual identities — from concept art to final asset pipelines — that make your game instantly recognizable.</p>
+      </div>
+      <div class="service-item">
+        <div class="service-num">05</div>
+        <div class="service-title">Game Server</div>
+        <p class="service-desc"> Multiplayer Game Server</p>
+      </div>
+      <div class="service-item">
+        <div class="service-num">06</div>
+        <div class="service-title">Publishing & UA</div>
+        <p class="service-desc">App store optimization, user acquisition strategy, and global publishing support to launch with impact.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <div class="footer-brand">Soft Engine Mobile Game</div>
+      <div class="footer-made">© 2026 Soft Engine Mobile Game. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <div class="footer-right">service@softenginemax.com</div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact — Soft Engine Mobile Game</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #E8E4DC;
+            --black: #0A0A0A;
+            --green: #22A64A;
+            --warm-gray: #B5B0A8;
+            --white: #ffffff;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--black);
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            background: var(--bg);
+        }
+
+        .nav-logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+            font-size: 14px;
+        }
+
+        .nav-links a {
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .nav-links .active {
+            opacity: 1;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .contact-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 61px);
+        }
+
+        .contact-left {
+            padding: 80px 60px 80px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .contact-left h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .contact-left .sub {
+            font-size: 30px;
+            line-height: 1.7;
+            opacity: 0.6;
+            max-width: 380px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            /*margin-left: 30px;*/
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+            opacity: 0.65;
+        }
+
+        label span {
+            font-weight: 400;
+            opacity: 0.7;
+            font-size: 11px;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid rgba(0, 0, 0, 0.18);
+            border-radius: 100px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--black);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea {
+            border-radius: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--green);
+        }
+
+        input::placeholder, textarea::placeholder {
+            opacity: 0.35;
+        }
+
+        .btn-send {
+            background: var(--green);
+            color: var(--white);
+            border: none;
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background: #1a8a3c;
+        }
+
+        .contact-right {
+            background: linear-gradient(160deg, #d4cec4 0%, #bfb9ae 50%, #a8a29a 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .device-hero {
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(160deg, #d8d3c8 0%, #c4bfb5 100%);
+            border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .device-hero .dl {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1.5px;
+            height: 40%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+
+        .device-hero .dc {
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+        }
+
+        .device-hero .dv {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            border-radius: 0 0 24px 24px;
+            overflow: hidden;
+            display: flex;
+            gap: 2px;
+            padding: 0 14px;
+            align-items: center;
+        }
+
+        .device-hero .dv span {
+            flex: 1;
+            height: 14px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+        }
+
+        footer {
+            background: var(--bg);
+            padding: 60px 40px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: end;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .footer-brand {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+
+        .footer-made {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-right {
+            text-align: right;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .contact-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav, .contact-left, footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-right {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo">Soft Engine Mobile Game</a>
+    <ul class="nav-links">
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="index.html#products">Shop</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="contact-hero">
+    <div class="contact-left">
+        <div>
+            <h1>Contact Email</h1>
+            <p class="sub">For Support Our Games</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <h3>service@softenginemax.com</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contact-right">
+        <div class="device-hero">
+            <div class="dl"></div>
+            <div class="dc"></div>
+            <div class="dv">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div>
+        <div class="footer-brand">Soft Engine Mobile Game</div>
+        <div class="footer-made">© 2026 Soft Engine Mobile Game. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </div>
+    <div class="footer-right">service@softenginemax.com</div>
+</footer>
+
+</body>
+</html>
